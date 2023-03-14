@@ -19,6 +19,25 @@ library(leaflet)
 bostonWeatherStations <- read.csv(here::here("boston_climate_data.csv"))
 ```
 
+#### Data Summary
+```{r}
+station_dist <- bostonWeatherStations %>%
+  count(NAME) %>%
+  filter(n >= quantile(n, probs = .75))
+  
+  # mutate(avg = ifelse(n>=median(n), 1, 0)) %>%
+  # filter(avg == 1) %>%
+  # select(-c(avg))
+
+station_dist_viz <- ggplot(station_dist, aes(x=reorder(NAME, -n), y=n)) +
+  geom_col() +
+  theme(axis.text.x = element_text(angle = 45, size = 5))
+
+station_dist_viz
+summary(bostonWeatherStations$NAME)
+```
+
+
 #### Filter data for unique weather stations
 ```{r}
 weather_stations_df <- bostonWeatherStations %>%
@@ -39,4 +58,8 @@ weather_stations_map <- weather_stations_df %>%
 weather_stations_map
 ```
 
+#### Exploring measures for a specific weather station
+```{r}
+
+```
 
