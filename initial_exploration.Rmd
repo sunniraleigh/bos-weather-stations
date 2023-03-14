@@ -1,0 +1,42 @@
+---
+title: "Initial Exploration"
+author: "Sunni Raleigh"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+### Import Packages
+```{r}
+library(tidyverse)
+library(leaflet)
+```
+
+### Load Data
+```{r}
+bostonWeatherStations <- read.csv(here::here("boston_climate_data.csv"))
+```
+
+#### Filter data for unique weather stations
+```{r}
+weather_stations_df <- bostonWeatherStations %>%
+  select(c(NAME, LONGITUDE, LATITUDE)) %>%
+  group_by(NAME) %>%
+  unique.data.frame()
+  
+```
+
+
+### Map
+```{r}
+weather_stations_map <- weather_stations_df %>%
+  leaflet() %>%
+  addTiles() %>%
+  addMarkers(lng = ~LONGITUDE, lat = ~LATITUDE, popup = ~NAME)
+
+weather_stations_map
+```
+
+
