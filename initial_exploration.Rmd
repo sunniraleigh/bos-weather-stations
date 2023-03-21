@@ -14,9 +14,29 @@ library(tidyverse)
 library(leaflet)
 ```
 
-### Load Data
+### Load Initial Data
+
+Uncomment the data if you lose `station-data.csv`
 ```{r}
-bostonWeatherStations <- read.csv(here::here("boston_climate_data.csv"))
+bostonWeatherStationsInit <- read.csv(here::here("boston_climate_data.csv"))
+
+bostonWeatherStations <- bostonWeatherStationsInit %>%
+  select(c(
+    STATION,
+    NAME,
+    LATITUDE,
+    LONGITUDE,
+    ELEVATION,
+    DATE,
+    PRCP,
+    SNOW,
+    TMAX,
+    TMIN
+  ))
+# 
+# write.csv(bostonWeatherStations, "station-data.csv", row.names = FALSE)
+# 
+# bostonWeatherStations <- read.csv(here::here("station-data.csv"))
 ```
 
 #### Data Summary
@@ -58,8 +78,24 @@ weather_stations_map <- weather_stations_df %>%
 weather_stations_map
 ```
 
-#### Exploring measures for a specific weather station
+#### Exploring measures for CHESTNUT HILL, MA US
 ```{r}
+not_all_na <- function(x) any(!is.na(x) || rlang::is_empty(x))
 
+chestnut <- bostonWeatherStations %>%
+  filter(NAME == "CHESTNUT HILL, MA US") %>%
+  select(c(
+    STATION,
+    NAME,
+    LATITUDE,
+    LONGITUDE,
+    ELEVATION,
+    DATE,
+    PRCP,
+    TMAX,
+    TMIN
+  ))
+
+summary(chestnut)
 ```
 
