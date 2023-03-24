@@ -17,7 +17,7 @@ ui <- fluidPage(
   sliderInput("date", "Date", 
               min = min(stations_data$DATE),
               max = max(stations_data$DATE),
-              value = c(median(unique(stations_data$DATE)), max(unique(stations_data$DATE)))
+              value = c(median(unique(stations_data$DATE)), median(unique(stations_data$DATE)))
               ),
   
   tableOutput("stations")
@@ -36,8 +36,28 @@ server <- function(input, output) {
       filter(if(input$station_name != "All") (NAME == input$station_name) else TRUE)
   })
   
-  # output$range <- renderPrint({ typeof(input$date[2]) })
-  
+  observeEvent(new_data(),{
+    min_val <- min(unique(new_data()$DATE))
+    max_val <- max(unique(new_data()$DATE))
+    mid_val <- median(unique(new_data()$DATE))
+    
+    if(input$station_name != "All"){
+      updateSliderInput(inputId = "date",
+                        min = min_val,
+                        max = max_val,
+                        value = c(min_val, max_val)
+      )
+    }else{
+      updateSliderInput(inputId = "date",
+                        min = min_val,
+                        max = max_val,
+                        value = c(mid_val, mid_val)
+                        )
+    }
+    
+  })
+
+  # Filtering data by a date range (range value is influenced by the station name)
   # slider_data <- reactive(
   #   stations_data[
   #     stations_data$DATE >= input$date[1] &
@@ -45,6 +65,10 @@ server <- function(input, output) {
   #   ] %>%
   #     mutate(DATE = as.character(DATE))
   # )
+  
+  # output$range <- renderPrint({ typeof(input$date[2]) })
+  
+  
   
   
   # 
